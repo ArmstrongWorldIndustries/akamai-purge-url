@@ -6,7 +6,7 @@ Run `gradle uber` to generate a jar file with all the dependencies
 combined into a single jar. 
 
 ## Example usage (after jar is built)
-     java -cp build/libs/akamai-purge-url-1.0-SNAPSHOT.jar Purge \
+     java -cp build/libs/akamai-purge-url-1.1-SNAPSHOT.jar Purge \
       --access-token=zzzzzzzzzzzzzzzzzzzz \
       --client-token=qqqqqqqqqqqqqqqqqqq  \
       --client-secret="yyyyyyyyyyyyyyyyyyyyyyyy" \
