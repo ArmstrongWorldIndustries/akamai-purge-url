@@ -34,7 +34,15 @@ public class Purge {
     }
 
     private void go(CommandLine cmd) throws Exception {
-        HttpPost request = new HttpPost("https://" + cmd.getOptionValue("host") +  "/ccu/v3/invalidate/url/production");
+        String type = cmd.getOptionValue("type");
+        if (type == null) {
+            type = "invalidate";
+        } else if (!type.equals("delete") && !type.equals("invalidate")) {
+            throw new IllegalArgumentException("type parameter must be either 'invalidate' or 'delete'");
+        }
+
+        String url = "https://" + cmd.getOptionValue("host") +  "/ccu/v3/" + type + "/url/production";
+        HttpPost request = new HttpPost(url);
         request.setEntity(new StringEntity(getEntityBody(cmd), ContentType.create("application/json")));
 
         HttpResponse response = getClient(cmd).execute(request);
@@ -67,6 +75,8 @@ public class Purge {
         options.addRequiredOption("h", "host", true, "Host");
         options.addOption("u", "url", true, "Url");
         options.addOption("f", "url-file", true, "Url File");
+        options.addOption("t", "type", true, "invalidate or delete - Default is invalidate");
+
         return options;
     }
 

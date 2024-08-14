@@ -1,32 +1,37 @@
 group 'awi'
-version '1.0-SNAPSHOT'
-
+version '1.1-SNAPSHOT'
 apply plugin: 'java'
 
-sourceCompatibility = 1.8
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compile group: 'org.slf4j', name: 'slf4j-nop', version: '1.7.25'
+    implementation group: 'org.slf4j', name: 'slf4j-nop', version: '2.0.16'
 
-    compile 'com.fasterxml.jackson.core:jackson-core:2.6.5'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.6.5'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.6.5'
-    compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
-    compile 'com.akamai.edgegrid:edgegrid-signer-apache-http-client:2.1.0'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.17.2'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.17.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.2'
+    implementation group: 'commons-cli', name: 'commons-cli', version: '1.8.0'
+    implementation 'com.akamai.edgegrid:edgegrid-signer-apache-http-client:5.1.1'
 }
 
 task uberjar(type: Jar) {
-    from files(sourceSets.main.output.classesDir)
-    from configurations.runtime.asFileTree.files.collect { zipTree(it) }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
+    from files(sourceSets.main.output.classesDirs)
+    from files(sourceSets.main.resources.srcDirs)
+    from configurations.runtimeClasspath.asFileTree.files.collect { zipTree(it) }
     manifest {
         attributes 'Main-Class': 'Purge'
     }
 }
+
 
 uberjar.dependsOn('compileJava')
 
